@@ -39,6 +39,7 @@ Get-ChildItem -Path $sourcePath -Recurse -Include $pdfExtensions | where {$_ -li
 
 ## Step 3: sort remaining files into their extensions
 
+# Referenced from: https://github.com/Useful-Scripting-Network/Powershell/blob/master/Sort-Files.ps1
 function Sort-Files {
     [CmdletBinding()]
     param (
@@ -86,4 +87,4 @@ function Sort-Files {
 }
 
 # Call the Sort-Files function with the current user's downloads
-Sort-Files -cwd $env:USERPROFILE\downloads
+Sort-Files -cwd "C:\Users\Christopher Fok\Downloads"
