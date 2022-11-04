@@ -1,31 +1,43 @@
-# Step 1: Combine all image files into the "images" folder
+### Overview
+### Step 1: Combine all image files into the "images" folder
+### Step 2: Sort through the Minerva assignment PDFs
+### Step 3: sort remaining files into their extensions
 
+
+## Step 1: Combine all image files into the "images" folder
+
+# Create images directory if not exists
 $folderName = "C:\Users\Christopher Fok\Downloads\images"
 if (-Not (Test-Path $folderName)) {
 	New-Item $folderName -ItemType Directory
 };
 
+# Define some parameters
 $sourcePath     = "C:\Users\Christopher Fok\Downloads";
 $destPath       = "C:\Users\Christopher Fok\Downloads\images";
 $imageExtensions  = '*.jpeg','*.tiff','*.jpg','*.jpeg', '*.HEIC', '*.jfif', '*.png';
 
+# Get files in my Downloads folder with these extension, then move them
 Get-ChildItem -Path $sourcePath -Recurse -Include $imageExtensions -File | Move-Item -Destination $destPath;
 
 
-# Step 2: Sort through the Minerva assignment PDFs
+## Step 2: Sort through the Minerva assignment PDFs
 
+# Create assignments directory if not exists
 $folderName = "C:\Users\Christopher Fok\Downloads\minerva_assignments";
 if (-Not (Test-Path $folderName)) {
 	New-Item $folderName -ItemType Directory
 };
 
+# Define some parameters again
 $sourcePath     = "C:\Users\Christopher Fok\Downloads";
 $assignmentPath = "C:\Users\Christopher Fok\Downloads\minerva_assignments";
 $pdfExtensions  = '*.pdf';
 
-get-childitem -Path $sourcePath -Recurse -Include $pdfExtensions | where {$_ -like '*CS*' -or $_ -like '*SS*'-or $_ -like '*CP*'} | move-item -Destination $assignmentPath;
+# Get .pdf files in my Downloads folder, filter by subject keywords in filename ("cs166-first-assignment"), then move them
+Get-ChildItem -Path $sourcePath -Recurse -Include $pdfExtensions | where {$_ -like '*CS*' -or $_ -like '*SS*'-or $_ -like '*CP*'} | move-item -Destination $assignmentPath;
 
-# Step 3: sort remaining files into their extensions
+## Step 3: sort remaining files into their extensions
 
 function Sort-Files {
     [CmdletBinding()]
@@ -52,8 +64,8 @@ function Sort-Files {
         $extensions.Add($folder.Extension)
     }
 
-    if($extensions.Count -gt 0){
-        foreach($file in $files){
+    if ($extensions.Count -gt 0) {
+        foreach ($file in $files) {
             try {
                 Write-Host "Moving $($file) to folder: $cwd\$($file.Extension)"
                 # If File exists or in use ErrorAction Stop so we can catch the error properly
@@ -68,15 +80,10 @@ function Sort-Files {
         Write-Host "Summary of Sorting Files"
         # Group and count the extentions
         $extensions | Group-Object -NoElement | Sort-Object count -Descending
-    }else {
+    } else {
         Write-Host "No files to sort here: $cwd"
     }
-    
 }
 
+# Call the Sort-Files function with the current user's downloads
 Sort-Files -cwd $env:USERPROFILE\downloads
-
-# Remove-Item 'C:\Users\Christopher Fok\Downloads\.zip' -ErrorAction Ignore
-
-
-
